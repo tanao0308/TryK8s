@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      containers:
+        - name: demo
+          image: tanao0308/demo:latest
+          ports:
+#           containerPort指定的是容器内部应用监听的端口
+            - containerPort: 8080
+
+# --- 用于在一个文件里定义多个 k8s 资源
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-service
+# 指定 Service 的详细配置，包括选择器、端口和类型等
+spec:
+  # 用于选择匹配标签为 app: demo 的 Pod。 Service 将负载均衡这些 Pod 之间的流量
+  selector:
+    app: demo
+  type: NodePort
+  ports:
+    - protocol: TCP
+      nodePort: 30001
+      port: 8080
+      targetPort: 8080
