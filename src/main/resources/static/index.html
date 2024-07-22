@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Number Input</title>
+</head>
+<body>
+<h1>Enter a number</h1>
+<input type="number" id="numberInput" placeholder="Enter a number">
+<button onclick="sendNumber()">Submit</button>
+
+<p id="response"></p>
+
+<script>
+    function sendNumber() {
+        const number = document.getElementById('numberInput').value;
+
+<!-- fetch 是用于进行网络请求的现代JavaScript API。-->
+<!--'/api/number' 是请求的URL，表示要将数据发送到服务器的 /api/number 端点。-->
+        fetch('/api/number', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+<!--一个键值对，表示number的值是123(举例)-->
+            body: 'number=' + number
+        })
+<!--then(response => response.text())：在成功发送请求并接收到服务器响应后，提取响应体的文本内容。 response.text() 返回一个解析为文本的 Promise。-->
+        .then(response => response.text())
+<!--then(data => { document.getElementById('response').innerText = data; })：在上一步完成后，将提取的文本内容（即服务器的响应）显示在网页上 id 为 response 的元素中。-->
+        .then(data => {
+            document.getElementById('response').innerText = data;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('response').innerText = 'An error occurred';
+        });
+    }
+</script>
+</body>
+</html>
